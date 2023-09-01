@@ -10,9 +10,8 @@ void _safeAddToVector(std::vector<const char*> &vector, const char* value) {
     vector.push_back(value);
 }
 
-DGAPI DgResult dgInitGraphicsEngine(DgEngine &engine, DgEngineCreateInfo &createInfo, DgGraphicsEngineCreateInfo &graphicsCreateInfo) {
-    for(auto module : engine.submodules) {
-        if(module._type == DRAGON_GRAPHICS_ENGINE_TYPE)
-    }
-    return DG_SUCCESS;
+DGAPI DgGraphicsEngine::DgGraphicsEngine_T(DgEngine &engine, DgEngineCreateInfo &createInfo, DgGraphicsEngineCreateInfo &graphicsCreateInfo) {
+    size_t index = engine.submodules.size();
+    engine.submodules.push_back(self);
+    DgGraphicsEngine* pEngine = std::any_cast<DgGraphicsEngine*>engine.submodules.at(index);
 }

@@ -12,20 +12,15 @@ struct DgGraphicsEngineCreateInfo_T {
     std::function<int(DgGPU)> PFN_GPURatingFunc;
 };
 
-struct DgGraphicsEngine_T {
-    uint32_t _type;
-    VkInstance instance;
-    std::vector<DgWindow*> vpWindows;
-    #ifndef NDEBUG
-    VkDebugUtilsMessengerEXT debugMessenger;
-    #endif
-};
-
-
 typedef struct DgGraphicsEngineCreateInfo_T DgGraphicsEngineCreateInfo;
-typedef struct DgGraphicsEngine_T DgGraphicsEngine;
 
-DGAPI DgResult dgGraphicsInitEngine(DgGraphicsEngineCreateInfo createInfo, std::unique_ptr<DgEngine>& pEngine);
-DGAPI DgBool32 dgGraphicsCanEngineClose(std::unique_ptr<DgEngine>& pEngine);
-DGAPI DgResult dgGraphicsUpdateEngine(std::unique_ptr<DgEngine>& pEngine);
-DGAPI void dgGraphicsDestroyEngine(std::unique_ptr<DgEngine>& pEngine);
+typedef class DgGraphicsEngine_T {
+    std::vector<DgWindow*> vpWindows;
+
+    DgEngine* owner;
+    public:
+        DgGraphicsEngine_T(DgEngine &engine, DgEngineCreateInfo &createInfo, DgGraphicsEngineCreateInfo &graphicsCreateInfo);
+        DgResult update();
+        void close();
+    
+} DgGraphicsEngine;

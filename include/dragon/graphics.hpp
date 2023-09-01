@@ -5,16 +5,23 @@
 #include "graphics/camera.hpp"
 //#include "graphics/dyload.hpp"
 #include "graphics/engine.hpp"
-#include "graphics/frag.hpp"
 #include "graphics/gpu_queue_families.hpp"
 #include "graphics/model_create_info.hpp"
 #include "graphics/model.hpp"
 #include "graphics/swap_chain_support.hpp"
-#include "graphics/vert.hpp"
 #include "graphics/vertex.hpp"
 #include "graphics/vulkan_debug.hpp"
 #include "graphics/window_create_info.hpp"
 #include "graphics/window.hpp"
+
+#ifdef DRAGON_2D_RENDER
+    #include "graphics/shaders/2d.frag.hpp"
+    #include "graphics/shaders/2d.vert.hpp"
+#else
+    #include "graphics/shaders/3d.frag.hpp"
+    #include "graphics/shaders/3d.vert.hpp"
+#endif
+
 /*
 namespace Dragon {
     // Classes
