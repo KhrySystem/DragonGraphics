@@ -1,26 +1,25 @@
-#pragma once
+#include <dragon/core/Submodule.hpp>
+#include <glfw/glfw3.h>
 
-#include <dragon/core.hpp>
-#include "window.hpp"
+namespace Dragon::Graphics
+{
+    class Engine : public Dragon::Submodule
+    {
+        private:
+            std::vector<GLFWwindow*> windows;
+        public:
+            void editWindow(size_t index, uint32_t width, uint32_t height, std::string title);
 
+            void beforeInstanceCreation(Dragon::Engine* parent) override;
+            Dragon::InstanceBuilder adjustInstanceParams(Dragon::Engine* parent, Dragon::InstanceBuilder &previous) override;
+            void beforePhysicalDeviceSelection(Dragon::Engine* parent) override;
+            Dragon::PhysicalDeviceSelector adjustPhysicalDeviceParams(Dragon::Engine* parent, Dragon::PhysicalDeviceSelector &previous) override;
 
-struct DgGraphicsEngineCreateInfo_T {
-    std::vector<std::string> vEnabledLayerNames;
-    std::vector<std::string> vEnabledExtensionNames;
+            void update(Dragon::Engine* parent) override;
 
-    DgBool32 enableVulkanDebug;
-    std::function<int(DgGPU)> PFN_GPURatingFunc;
-};
-
-typedef struct DgGraphicsEngineCreateInfo_T DgGraphicsEngineCreateInfo;
-
-typedef class DgGraphicsEngine_T {
-    std::vector<DgWindow*> vpWindows;
-
-    DgEngine* owner;
-    public:
-        DgGraphicsEngine_T(DgEngine &engine, DgEngineCreateInfo &createInfo, DgGraphicsEngineCreateInfo &graphicsCreateInfo);
-        DgResult update();
-        void close();
+            void afterClose(Dragon::Engine* parent) override;
+            void close(Dragon::Engine* parent) override;
+    };
     
-} DgGraphicsEngine;
+} // namespace Dragon::Graphics
+
