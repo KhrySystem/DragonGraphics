@@ -4,8 +4,8 @@ add_subdirectory(external/glm)
 add_subdirectory(external/glfw)
 
 add_library(dggraphics-${DragonEngine_VERSION_MAJOR}
-    "src/Engine.cpp"
-    "src/Window.cpp"
+    "src/engine.cpp"
+    "src/window.cpp"
 )
 
 # Specify the include directories for the library
