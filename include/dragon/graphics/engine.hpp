@@ -11,7 +11,7 @@ namespace Dragon::Graphics
             Dragon::Engine* parent;
             std::vector<Window*> windows;
         public:
-            void onAddition(Dragon::Engine* parent) override;
+            virtual void onAddition(Dragon::Engine* parent) override;
 
             Window* getWindow(size_t index);
 
@@ -19,14 +19,14 @@ namespace Dragon::Graphics
 
             Window* createWindow(int width, int height, std::string title);
 
-            Dragon::InstanceBuilder adjustInstanceParams(Dragon::Engine* parent, Dragon::InstanceBuilder &previous) override;
-            void beforePhysicalDeviceSelection(Dragon::Engine* parent) override;
-            Dragon::PhysicalDeviceSelector adjustPhysicalDeviceParams(Dragon::Engine* parent, Dragon::PhysicalDeviceSelector &previous) override;
+            virtual Dragon::InstanceBuilder adjustInstanceParams(Dragon::Engine* parent, Dragon::InstanceBuilder &previous) override;
+            virtual void beforePhysicalDeviceSelection(Dragon::Engine* parent) override;
+            virtual Dragon::PhysicalDeviceSelector adjustPhysicalDeviceParams(Dragon::Engine* parent, Dragon::PhysicalDeviceSelector &previous) override;
 
-            void update(Dragon::Engine* parent) override;
+            virtual void update(Dragon::Engine* parent) override;
 
-            void afterClose(Dragon::Engine* parent) override;
-            void close(Dragon::Engine* parent) override;
+            virtual void afterClose(Dragon::Engine* parent) override;
+            virtual void close(Dragon::Engine* parent) override;
     };
     
 } // namespace Dragon::Graphics

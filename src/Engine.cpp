@@ -1,7 +1,7 @@
 #include <cassert>
 #include <dragon/graphics.hpp>
 
-void Dragon::Graphics::Engine::beforeInstanceCreation(Dragon::Engine* parent) {
+void Dragon::Graphics::Engine::onAddition(Dragon::Engine* parent) {
     if(!glfwInit()) {
         throw "GLFW Initialization failed.";
     }
