@@ -4,11 +4,11 @@
 void Dragon::Graphics::Engine::onAddition(Dragon::Engine* parent) {
     
     if(!glfwInit()) {
-        throw "GLFW Initialization failed.";
+        throw std::string("GLFW Initialization failed.");
     }
 
     if(!glfwVulkanSupported()) {
-        throw "Current GLFW instance does not support Vulkan";
+        throw std::string("Current GLFW instance does not support Vulkan");
     }
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);

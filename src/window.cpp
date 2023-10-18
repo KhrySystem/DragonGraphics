@@ -1,14 +1,16 @@
 #include <dragon/graphics.hpp>
 #include <vulkan/vk_enum_string_helper.h>
+
 Dragon::Graphics::Window::Window(VkInstance instance, int width, int height, std::string title) {
     GLFWwindow* window = glfwCreateWindow(1, 1, "", nullptr, nullptr);
     if(!window) {
         throw std::string("First GLFW Window was NULL, Graphics initialization cannot proceed.\n");
     }
+    this->window = window;
 
     VkResult result = glfwCreateWindowSurface(instance, window, nullptr, &this->surface);
     if(result != VK_SUCCESS) {
-        throw (boost::format("Window Surface failed with %1%") % string_VkResult(result)).str();
+        throw fmt::format("Window Surface failed with {}", string_VkResult(result));
     }
 }
 
