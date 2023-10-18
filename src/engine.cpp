@@ -2,6 +2,7 @@
 #include <dragon/graphics.hpp>
 
 void Dragon::Graphics::Engine::onAddition(Dragon::Engine* parent) {
+    
     if(!glfwInit()) {
         throw "GLFW Initialization failed.";
     }
@@ -9,6 +10,9 @@ void Dragon::Graphics::Engine::onAddition(Dragon::Engine* parent) {
     if(!glfwVulkanSupported()) {
         throw "Current GLFW instance does not support Vulkan";
     }
+
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    this->parent = parent;
 }
 
 Dragon::InstanceBuilder Dragon::Graphics::Engine::adjustInstanceParams(Dragon::Engine* parent, Dragon::InstanceBuilder &previous) {
@@ -36,6 +40,7 @@ Dragon::PhysicalDeviceSelector Dragon::Graphics::Engine::adjustPhysicalDevicePar
 }
 
 void Dragon::Graphics::Engine::update(Dragon::Engine* parent) {
+    glfwPollEvents();
     for(int i = 0; i < this->windows.size(); i++) {
         Dragon::Graphics::Window* window = this->windows.at(i);
         if(!window->shouldClose()) {

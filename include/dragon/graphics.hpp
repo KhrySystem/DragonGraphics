@@ -4,6 +4,7 @@
 #include <dragon/core.hpp>
 
 // General graphics dependencies 
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
 // Graphics SRC
