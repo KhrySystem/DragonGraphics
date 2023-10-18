@@ -1,5 +1,4 @@
 #include <vulkan/vulkan.hpp>
-#include <glfw/glfw3.h>
 
 namespace Dragon::Graphics {
     class Window {
@@ -8,16 +7,17 @@ namespace Dragon::Graphics {
             GLFWwindow* window;
         public:
             Window(VkInstance instance, int width, int height, std::string title);
-            VkSurfaceKHR getSurface() {return this->surface;}
-            GLFWwindow* getRawWindow() {return this->window;}
+            inline VkSurfaceKHR getSurface() {return this->surface;}
+            inline GLFWwindow* getRawWindow() {return this->window;}
 
-            void setWindowTitle(std::string title) {glfwSetWindowTitle(this->window, title.c_str());}
-            void setWindowSize(int width, int height) {glfwSetWindowSize(this->window, width, height);}
+            inline void setWindowTitle(std::string title) {glfwSetWindowTitle(this->window, title.c_str());}
+            inline void setWindowSize(int width, int height) {glfwSetWindowSize(this->window, width, height);}
             int getWindowHeight();
             int getWindowWidth();
 
-            bool shouldClose() {return glfwWindowShouldClose(this->window);}
+            void update();
 
-
+            inline bool shouldClose() {return glfwWindowShouldClose(this->window);}
+            void close(VkInstance instance);
     };
 } // namespace Dragon::Graphics
