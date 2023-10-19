@@ -1,5 +1,4 @@
 #include <dragon/graphics.hpp>
-#include <vulkan/vk_enum_string_helper.h>
 
 Dragon::Graphics::Window::Window(VkInstance instance, int width, int height, std::string title) {
     GLFWwindow* window = glfwCreateWindow(1, 1, "", nullptr, nullptr);
