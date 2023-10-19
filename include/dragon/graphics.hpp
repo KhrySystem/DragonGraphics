@@ -9,3 +9,7 @@
 
 // Graphics SRC
 #include "graphics/engine.hpp"
+#include "graphics/model.hpp"
+#include "graphics/rotation.hpp"
+#include "graphics/vertex.hpp"
+#include "graphics/window.hpp"

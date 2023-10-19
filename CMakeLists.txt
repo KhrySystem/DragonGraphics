@@ -6,6 +6,7 @@ add_subdirectory(external/glfw)
 add_library(dggraphics-${DragonEngine_VERSION_MAJOR}
     "src/engine.cpp"
     "src/window.cpp"
+    "src/rotation.cpp"
 )
 
 # Specify the include directories for the library

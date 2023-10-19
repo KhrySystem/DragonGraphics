@@ -6,7 +6,7 @@ Dragon::Graphics::Window::Window(VkInstance instance, int width, int height, std
         throw std::string("First GLFW Window was NULL, Graphics initialization cannot proceed.\n");
     }
     this->window = window;
-
+    
     VkResult result = glfwCreateWindowSurface(instance, window, nullptr, &this->surface);
     if(result != VK_SUCCESS) {
         throw fmt::format("Window Surface failed with {}", string_VkResult(result));

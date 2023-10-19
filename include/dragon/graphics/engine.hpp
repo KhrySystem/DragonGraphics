@@ -1,5 +1,6 @@
-#include <dragon/core.hpp>
+#pragma once
 
+#include <dragon/core.hpp>
 
 #include "window.hpp"
 

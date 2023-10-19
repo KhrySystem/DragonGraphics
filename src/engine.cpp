@@ -30,9 +30,15 @@ Dragon::Graphics::Window* Dragon::Graphics::Engine::getWindow(size_t index) {
     return this->windows.at(0);
 }
 
-void Dragon::Graphics::Engine::beforePhysicalDeviceSelection(Dragon::Engine* parent) {
+Dragon::Graphics::Window* Dragon::Graphics::Engine::createWindow(int width, int height, std::string title) {
+    Dragon::Graphics::Window* window = new Window(this->parent->instance.instance, width, height, title);
+    this->windows.push_back(window);
+    return window;
+}
 
-    this->windows.push_back(new Dragon::Graphics::Window(parent->instance.instance, 1, 1, ""));
+void Dragon::Graphics::Engine::beforePhysicalDeviceSelection(Dragon::Engine* parent) {
+    if(this->windows.size() == 0)
+        this->windows.push_back(new Dragon::Graphics::Window(parent->instance.instance, 1, 1, ""));
 }
 
 Dragon::PhysicalDeviceSelector Dragon::Graphics::Engine::adjustPhysicalDeviceParams(Dragon::Engine* parent, Dragon::PhysicalDeviceSelector &previous) {
