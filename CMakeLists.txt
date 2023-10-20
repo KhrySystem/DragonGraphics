@@ -1,5 +1,8 @@
 option(DragonGraphics_2D_RENDER ON)
 
+set(GLFW_BUILD_DOCS ${Dragon_BUILD_DEPENDENCY_DOCS})
+
+
 add_subdirectory(external/glm)
 add_subdirectory(external/glfw)
 
