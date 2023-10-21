@@ -12,7 +12,7 @@ namespace Dragon::Graphics {
     {
     private:
         Rotation rotation; /**<Represents this model's current rotation.*/
-        std::vector<Model>; /**Child models that will be moved an equal proportion when this model moves*/
+        //std::vector<Model>; /**Child models that will be moved an equal proportion when this model moves*/
         /* data */
     public:
     };
