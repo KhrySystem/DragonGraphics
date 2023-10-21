@@ -1,7 +1,8 @@
 #include <dragon/graphics.hpp>
-#include <cmath>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
-glm::vec3 Dragon::Graphics::Rotation::toEulerAngles() {
+Dragon::vec3 Dragon::Graphics::Rotation::toEulerAngles() {
     double pitch = std::asin(
         2 * (
             this->q.x * this->q.z +
@@ -19,25 +20,37 @@ glm::vec3 Dragon::Graphics::Rotation::toEulerAngles() {
     return {
         std::atan2(
             2 * ((this->q.x * this->q.y) + (this->q.z * this->q.w)), 
-            std::sqrt(std::pow(this->q.x, 2) - std::pow(this->q.y, 2) - std::pow(this->q.z, 2) + std::pow(this->q.w, 2))
+            std::pow(this->q.x, 2) - std::pow(this->q.y, 2) - std::pow(this->q.z, 2) + std::pow(this->q.w, 2)
         ),
         pitch, 
         std::atan2(
             2 * ((this->q.x * this->q.w) + (this->q.y * this->q.z)), 
-            std::sqrt(std::pow(this->q.x, 2) + std::pow(this->q.y, 2) - std::pow(this->q.z, 2) - std::pow(this->q.w, 2))
+            std::pow(this->q.x, 2) + std::pow(this->q.y, 2) - std::pow(this->q.z, 2) - std::pow(this->q.w, 2)
         )
     };
 }
 
-glm::mat3x3 Dragon::Graphics::Rotation::toRotationMatrix() {
+Dragon::mat3x3 Dragon::Graphics::Rotation::toRotationMatrix() {
     return  {
-        {1, 0, 0},
-        {0, 1, 0},
-        {0, 0, 1}
+        {
+            pow(this->q.x, 2) + pow(this->q.y, 2) - pow(this->q.z, 2) - pow(this->q.w, 2), 
+            2 * ((this->q.y * this->q.z) - (this->q.x * this->q.w)), 
+            2 * ((this->q.y * this->q.w) + (this->q.x * this->q.z))
+        },
+        {
+            2 * ((this->q.y * this->q.z) + (this->q.x * this->q.w)), 
+            pow(this->q.x, 2) - pow(this->q.y, 2) + pow(this->q.z, 2) - pow(this->q.w, 2), 
+            2 * ((this->q.y * this->q.w) - (this->q.x * this->q.z))
+        },
+        {
+            0, 
+            0, 
+            pow(this->q.x, 2) - pow(this->q.y, 2) + pow(this->q.z, 2) - pow(this->q.w, 2)
+        }
     };
 }
 
-glm::vec4 Dragon::Graphics::Rotation::toAxisAngle() {
+Dragon::vec4 Dragon::Graphics::Rotation::toAxisAngle() {
     if(this->q.x == 1.0) {
         return {0, 1, 0, 0};
     }

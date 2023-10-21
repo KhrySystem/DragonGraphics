@@ -1,17 +1,17 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "aliases.hpp"
 
 namespace Dragon::Graphics
 {
     struct Rotation {
         Rotation() {this->q = {1.0, 0.0, 0.0, 0.0}; }
 
-        glm::vec4 q;
+        Dragon::vec4 q;
         
-        glm::vec3 toEulerAngles();
-        glm::vec4 toQuaternion() {return this->q;}
-        glm::mat3x3 toRotationMatrix();
-        glm::vec4 toAxisAngle();
+        Dragon::vec3 toEulerAngles();
+        Dragon::vec4 toQuaternion() {return this->q;}
+        Dragon::mat3x3 toRotationMatrix();
+        Dragon::vec4 toAxisAngle();
     };
 } // namespace Dragon::Graphics

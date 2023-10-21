@@ -7,7 +7,8 @@
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-// Graphics SRC
+// Graphics src
+#include "graphics/aliases.hpp"
 #include "graphics/engine.hpp"
 #include "graphics/model.hpp"
 #include "graphics/rotation.hpp"
