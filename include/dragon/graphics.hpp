@@ -1,5 +1,11 @@
 #pragma once
 
+/**
+ * @defgroup Graphics Graphics Engine
+ * 
+ * @brief Structs and classes pertaining to the Graphics Engine
+*/
+
 // Graphics dependencies provided by DragonEngine
 #include <dragon/core.hpp>
 

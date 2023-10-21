@@ -3,10 +3,13 @@
 #include <vulkan/vulkan.hpp>
 
 namespace Dragon::Graphics {
+    /**
+     * @brief Window class. Represents an active game world, including at least one camera
+    */
     class Window {
         private:
-            VkSurfaceKHR surface;
-            GLFWwindow* window;
+            VkSurfaceKHR surface; /**<Vulkan Surface. Serves as the interconnect between the native window and Vulkan*/
+            GLFWwindow* window; /**<GLFW window. container around a native window in a cross platform way.*/
         public:
             Window(VkInstance instance, int width, int height, std::string title);
             inline VkSurfaceKHR getSurface() {return this->surface;}
