@@ -1,5 +1,6 @@
 #pragma once
 
+#include <dragon/core.hpp>
 #include <glm/glm.hpp>
 
 namespace Dragon
@@ -39,4 +40,7 @@ namespace Dragon
     using mat4x3 = glm::mat4x3;
     using mat4x4 = glm::mat4x4;
     #endif
+
+    using Swapchain = vkb::Swapchain;
+    using SwapchainBuilder = vkb::SwapchainBuilder;
 } // namespace Dragon

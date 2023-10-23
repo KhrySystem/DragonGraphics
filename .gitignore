@@ -10,3 +10,4 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 include/dragon/graphics/shaders/
+include/dragon/graphics/config.hpp

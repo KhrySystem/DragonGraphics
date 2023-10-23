@@ -6,6 +6,10 @@
 
 #include <dragon/core.hpp>
 
+namespace Dragon::Graphics {
+    class Engine;
+}
+
 #include "window.hpp"
 
 /**
@@ -38,6 +42,11 @@ namespace Dragon::Graphics
             virtual void onAddition(Dragon::Engine* parent) override;
 
             /**
+             * @brief Returns this engine's parent core engine object pointer
+            */
+            Dragon::Engine* getParent() {return this->parent;}
+
+            /**
              * @param index The window's index, in order of creation.
              * 
              * @returns the pointer to the Window
@@ -64,9 +73,20 @@ namespace Dragon::Graphics
             */
             Window* createWindow(int width, int height, std::string title);
 
+            /**
+             * Reimplemented from Dragon::Submodule
+            */
             virtual Dragon::InstanceBuilder adjustInstanceParams(Dragon::Engine* parent, Dragon::InstanceBuilder &previous) override;
             virtual void beforePhysicalDeviceSelection(Dragon::Engine* parent) override;
+            /**
+             * Reimplemented from Dragon::Submodule
+            */
             virtual Dragon::PhysicalDeviceSelector adjustPhysicalDeviceParams(Dragon::Engine* parent, Dragon::PhysicalDeviceSelector &previous) override;
+            /**
+             * Reimplemented from Dragon::Submodule
+            */
+            virtual Dragon::DeviceBuilder adjustDeviceParams(Dragon::Engine* parent, Dragon::DeviceBuilder &previous) override;
+            virtual void afterDeviceCreation(Dragon::Engine* parent) override;
 
             /**
              * @brief Performs a single frame update of all windows, polls inputs, closes windows 

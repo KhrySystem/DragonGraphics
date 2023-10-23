@@ -20,5 +20,5 @@ foreach(f ${files})
     endif()
 
     message(STATUS "Adding ${s}${m}.spv to ${s}${m}.hpp")
-    bin2h(SOURCE_FILE ${CMAKE_CURRENT_BINARY_DIR}/src/shaders/${s}${m}.spv HEADER_FILE ${CMAKE_CURRENT_SOURCE_DIR}/include/dragon/graphics/shaders/${s}${m}.hpp VARIABLE_NAME ${s}${e}_SOURCE)
+    bin2h(SOURCE_FILE ${CMAKE_CURRENT_BINARY_DIR}/src/shaders/${s}${m}.spv HEADER_FILE ${CMAKE_CURRENT_SOURCE_DIR}/include/dragon/graphics/shaders/${s}${m}.hpp VARIABLE_NAME ${e}_SOURCE)
 endforeach()

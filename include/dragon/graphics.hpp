@@ -15,6 +15,7 @@
 
 // Graphics src
 #include "graphics/aliases.hpp"
+#include "graphics/config.hpp"
 #include "graphics/engine.hpp"
 #include "graphics/model.hpp"
 #include "graphics/rotation.hpp"
