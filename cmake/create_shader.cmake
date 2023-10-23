@@ -1,6 +1,10 @@
 include(${DragonEngine_SOURCE_DIR}/cmake/bin2h.cmake)
 file(GLOB files LIST_DIRECTORIES OFF ${CMAKE_CURRENT_SOURCE_DIR}/src/shaders/*.in)
 
+if(NOT ${Vulkan_glslc_FOUND} AND NOT ${Vulkan_glslangValidator_FOUND})
+    message(FATAL_ERROR "Neither GLSLC nor glslangValidator was found to compile SPIR-V bytecode")
+endif()
+
 foreach(f ${files})
     cmake_path(GET f FILENAME n)
     cmake_path(GET f STEM LAST_ONLY l)
@@ -11,14 +15,12 @@ foreach(f ${files})
 
     if(${Vulkan_glslc_FOUND})
         message(STATUS "Building ${l} with glslc")
-        execute_process(COMMAND ${Vulkan_GLSLC_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/src/shaders/${l} -o ${CMAKE_CURRENT_BINARY_DIR}/src/shaders/${s}${m}.spv --target-env=vulkan1.2 OUTPUT_QUIET)
-    elseif(${Vulkan_glslangValidator_FOUND})
+        execute_process(COMMAND ${Vulkan_GLSLC_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/src/shaders/${l} -o ${CMAKE_CURRENT_BINARY_DIR}/src/shaders/${s}${m}.spv --target-env=vulkan1.2)
+    else()
         message(STATUS "Building ${l} with glslangValidator")
         execute_process(COMMAND ${Vulkan_GLSLANG_VALIDATOR_EXECUTABLE} -V ${CMAKE_CURRENT_BINARY_DIR}/src/shaders/${l} -o ${CMAKE_CURRENT_BINARY_DIR}/src/shaders/${s}${m}.spv --target-env vulkan1.2)
-    else()
-        message(WARNING "Using prebuilt SPIR-V Binaries")
     endif()
 
-    message(STATUS "Adding ${s}${m}.spv to ${s}${m}.hpp")
+    message(STATUS "Adding ${s}${m}.spv to ${s}${m}.hpp with variable name ${e}_SOURCE and ${e}_SOURCE_SIZE")
     bin2h(SOURCE_FILE ${CMAKE_CURRENT_BINARY_DIR}/src/shaders/${s}${m}.spv HEADER_FILE ${CMAKE_CURRENT_SOURCE_DIR}/include/dragon/graphics/shaders/${s}${m}.hpp VARIABLE_NAME ${e}_SOURCE)
 endforeach()
