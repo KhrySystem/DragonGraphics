@@ -10,7 +10,7 @@ public namespace Dragon::Graphics {
      * @see Dragon::Graphics::Window::getCamera()
      * @see Dragon::Graphics::window::createNewCamera()
     */
-    class Camera {
+    class DGGRAPHICSAPI Camera {
         private:
             Dragon::mat4x4 model
             Dragon::mat4x4 view;

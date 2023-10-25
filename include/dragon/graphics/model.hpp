@@ -8,7 +8,7 @@ namespace Dragon::Graphics {
     /**
      * @brief Model class. Represents a model in game space (render layer > 0)
     */
-    class Model
+    class DGGRAPHICSAPI Model
     {
     private:
         Rotation rotation; /**<Represents this model's current rotation.*/

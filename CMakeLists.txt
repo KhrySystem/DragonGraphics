@@ -23,8 +23,8 @@ add_subdirectory(external/glfw)
 
 add_library(dggraphics-${DragonEngine_VERSION_MAJOR}
     "src/engine.cpp"
-    "src/window.cpp"
     "src/rotation.cpp"
+    "src/window.cpp"
 )
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/dragon/graphics/config.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/include/dragon/graphics/config.hpp)
@@ -42,6 +42,11 @@ target_link_libraries(dggraphics-${DragonEngine_VERSION_MAJOR}
         glm::glm
         Dragon::Core
 )
+
+if(BUILD_SHARED_LIBS)
+    target_compile_definitions(dggraphics-${DragonEngine_VERSION_MAJOR} PUBLIC DRAGON_GRAPHICS_DLL)
+    target_compile_definitions(dggraphics-${DragonEngine_VERSION_MAJOR} PRIVATE DRAGON_GRAPHICS_BUILD_DLL)
+endif()
 
 if(Dragon_2D_RENDER)
     target_compile_definitions(dggraphics-${DragonEngine_VERSION_MAJOR} PUBLIC Dragon_2D_RENDER)

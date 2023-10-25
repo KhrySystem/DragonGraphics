@@ -25,11 +25,6 @@ Dragon::InstanceBuilder Dragon::Graphics::Engine::adjustInstanceParams(Dragon::E
     return previous;
 }
 
-Dragon::Graphics::Window* Dragon::Graphics::Engine::getWindow(size_t index) {
-    assert(0 <= index && index < this->windows.size());
-    return this->windows.at(0);
-}
-
 Dragon::Graphics::Window* Dragon::Graphics::Engine::createWindow(int width, int height, std::string title) {
     Dragon::Graphics::Window* window = new Window(this->parent->getInstance(), width, height, title);
     this->windows.push_back(window);
@@ -66,13 +61,4 @@ void Dragon::Graphics::Engine::update(Dragon::Engine* parent) {
             this->windows.erase(this->windows.begin() + i);
         }
     }
-}
-
-
-void Dragon::Graphics::Engine::close(Dragon::Engine* parent) {
-    //for(GLFWwindow* window)
-}
-
-void Dragon::Graphics::Engine::afterClose(Dragon::Engine* parent) {
-    glfwTerminate();
 }

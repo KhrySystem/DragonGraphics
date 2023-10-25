@@ -13,7 +13,7 @@ namespace Dragon::Graphics {
      * 
      * @see Dragon::Graphics::Model
     */
-    struct Vertex
+    struct DGGRAPHICSAPI Vertex
     {
         /**Current position variable*/
         #ifndef DRAGON_2D_SHADER

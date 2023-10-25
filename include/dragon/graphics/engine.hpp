@@ -28,8 +28,7 @@ namespace Dragon::Graphics
      * 
      * @see Dragon::Engine::addSubmodule(Dragon::Submodule* submodule)
     */
-    class Engine : public Dragon::Submodule
-    {
+    class DGGRAPHICSAPI Engine : public Dragon::Submodule {
         private:
             /**
              * Parent Core Engine. Populated by the internal onAddition call.
@@ -44,7 +43,7 @@ namespace Dragon::Graphics
             /**
              * @brief Returns this engine's parent core engine object pointer
             */
-            Dragon::Engine* getParent() {return this->parent;}
+            inline Dragon::Engine* getParent() {return this->parent;}
 
             /**
              * @param index The window's index, in order of creation.
@@ -53,14 +52,14 @@ namespace Dragon::Graphics
              * 
              * @throws std::string
             */
-            Window* getWindow(size_t index);
+            inline Window* getWindow(size_t index) {return this->windows.at(index);};
 
             /**
              * Checks to see if there are still open windows from this engine
              * 
              * @returns if it is safe to close and shutdown this engine
             */
-            bool areWindowsOpen() {return this->windows.size() != 0;}
+            inline bool areWindowsOpen() {return this->windows.size() != 0;}
 
             /**
              * @param width The initial width of the window (in pixels)
@@ -94,8 +93,8 @@ namespace Dragon::Graphics
             */
             virtual void update(Dragon::Engine* parent) override;
 
-            virtual void afterClose(Dragon::Engine* parent) override;
-            virtual void close(Dragon::Engine* parent) override;
+            inline virtual void close(Dragon::Engine* parent) override {assert(this->windows.size() == 0);}
+            inline virtual void afterClose(Dragon::Engine* parent) override {glfwTerminate();}
     };
     
 } // namespace Dragon::Graphics

@@ -15,7 +15,7 @@ namespace Dragon::Graphics {
     /**
      * @brief Window class. Represents an active game world, including at least one camera
     */
-    class Window {
+    class DGGRAPHICSAPI Window {
         private:
             VkSurfaceKHR surface; /**<Vulkan Surface. Serves as the interconnect between the native window and Vulkan.*/
             GLFWwindow* window; /**<GLFW window. container around a native window in a cross platform way.*/
