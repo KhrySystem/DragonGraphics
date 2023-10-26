@@ -1,0 +1,18 @@
+include(GNUInstallDirs)
+
+install(TARGETS dggraphics-${DragonEngine_VERSION_MAJOR}
+    EXPORT DragonGraphics_EXPORT
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/dragon
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    PATTERN "*.in" EXCLUDE
+)
+
+install(EXPORT DragonGraphics_EXPORT
+    FILE DragonEngine_GraphicsTargets.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/dragon
+)
