@@ -15,6 +15,7 @@ if(NOT DEFINED Dragon_FRAME_RENDER_COUNT)
 endif()
 
 set(GLFW_BUILD_DOCS ${Dragon_BUILD_DEPENDENCY_DOCS})
+set(GLFW_INSTALL ${Dragon_INSTALL})
 
 include(cmake/create_shader.cmake)
 
