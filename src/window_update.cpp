@@ -1,6 +1,6 @@
 #include <dragon/graphics.hpp>
 
-void Dragon::Graphics::Window::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) {
+void Dragon::Graphics::Window::recordCommandBuffer(VkCommandBuffer commandBuffer, size_t imageIndex) {
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags = 0; // Optional
@@ -47,5 +47,36 @@ void Dragon::Graphics::Window::recordCommandBuffer(VkCommandBuffer commandBuffer
     result = vkEndCommandBuffer(commandBuffer);
     if(result != VK_SUCCESS) {
         throw fmt::format("vkEndCommandBuffer failed with {}", string_VkResult(result));
+    }
+}
+
+void Dragon::Graphics::Window::update(Dragon::Graphics::Engine* parent) {
+    if(this->shouldClose()) return;
+    vkWaitForFences(parent->getParent()->getDevice(), 1, &this->inFlightFence, VK_TRUE, UINT64_MAX);
+    vkResetFences(parent->getParent()->getDevice(), 1, &this->inFlightFence);
+    uint32_t imageIndex;
+    vkAcquireNextImageKHR(parent->getParent()->getDevice(), this->swapchain, UINT64_MAX, this->imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+    vkResetCommandBuffer(this->commandBuffer, 0);
+    this->recordCommandBuffer(this->commandBuffer, imageIndex);
+
+    VkSubmitInfo submitInfo{};
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+    VkSemaphore waitSemaphores[] = {this->imageAvailableSemaphore};
+    VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+    submitInfo.waitSemaphoreCount = 1;
+    submitInfo.pWaitSemaphores = waitSemaphores;
+    submitInfo.pWaitDstStageMask = waitStages;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &this->commandBuffer;
+
+    VkSemaphore signalSemaphores[] = {this->renderFinishedSemaphore};
+    submitInfo.signalSemaphoreCount = 1;
+    submitInfo.pSignalSemaphores = signalSemaphores;
+
+    VkResult result = vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFence);
+
+    if (result != VK_SUCCESS) {
+        throw std::runtime_error("failed to submit draw command buffer!");
     }
 }

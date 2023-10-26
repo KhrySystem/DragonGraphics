@@ -46,9 +46,7 @@ Dragon::Swapchain Dragon::Graphics::Window::recreateSwapchain(Dragon::Device dev
     return result.value();
 }
 
-void Dragon::Graphics::Window::update(Dragon::Graphics::Engine* parent) {
-    if(this->shouldClose()) return;
-}
+
 
 void Dragon::Graphics::Window::close(VkInstance instance, VkDevice device) {
     vkDestroyCommandPool(device, this->commandPool, nullptr);

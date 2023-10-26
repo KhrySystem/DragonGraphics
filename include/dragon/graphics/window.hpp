@@ -26,6 +26,10 @@ namespace Dragon::Graphics {
             std::vector<VkFramebuffer> framebuffers; /**Framebuffers for rendering multiple frames to the window*/
             VkCommandPool commandPool; /**<The thing responsible for the graphical GPU commands here*/
             VkCommandBuffer commandBuffer;
+            VkSemaphore imageAvailableSemaphore;
+            VkSemaphore renderFinishedSemaphore;
+            VkFence inFlightFence;
+
             void recordCommandBuffer(VkCommandBuffer commandBuffer, size_t imageIndex);
         public:
             /**

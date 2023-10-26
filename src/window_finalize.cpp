@@ -165,7 +165,25 @@ void createPipeline(Dragon::Device device, VkPipelineLayout pipelineLayout, VkRe
     vkDestroyShaderModule(device, vert, nullptr);
     vkDestroyShaderModule(device, frag, nullptr);
 }
-
+void createSyncObjects(Dragon::Device device, VkSemaphore* imageAvailableSemaphore, VkSemaphore* renderFinishedSemaphore, VkFence* inFlightFence) {
+    VkSemaphoreCreateInfo semaphoreInfo{};
+    semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+    VkFenceCreateInfo fenceInfo{};
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+    VkResult result = vkCreateSemaphore(device, &semaphoreInfo, nullptr, imageAvailableSemaphore);
+    if (result != VK_SUCCESS) {
+        throw fmt::format("vkCreateSemaphore failed with {}", string_VkResult(result));
+    }
+    result = vkCreateSemaphore(device, &semaphoreInfo, nullptr, renderFinishedSemaphore);
+    if (result != VK_SUCCESS) {
+        throw fmt::format("vkCreateSemaphore failed with {}", string_VkResult(result));
+    }
+    result = vkCreateFence(device, &fenceInfo, nullptr, inFlightFence);
+    if(result != VK_SUCCESS) {
+        throw fmt::format("vkCreateFence failed with {}", string_VkResult(result));
+    }
+}
 void Dragon::Graphics::Window::finalize(Dragon::Graphics::Engine* parent) {
     this->swapchain = this->recreateSwapchain(parent->getParent()->getDevice());
 
@@ -226,4 +244,6 @@ void Dragon::Graphics::Window::finalize(Dragon::Graphics::Engine* parent) {
     if (result != VK_SUCCESS) {
         throw fmt::format("failed to allocate command buffers with {}", string_VkResult(result));
     }
+
+    createSyncObjects(parent->getParent()->getDevice(), &this->imageAvailableSemaphore, &this->renderFinishedSemaphore, &this->inFlightFence);
 }
