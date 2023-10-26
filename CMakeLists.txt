@@ -15,6 +15,7 @@ if(NOT DEFINED Dragon_FRAME_RENDER_COUNT)
 endif()
 
 set(GLFW_BUILD_DOCS ${Dragon_BUILD_DEPENDENCY_DOCS})
+set(GLFW_INSTALL ${Dragon_INSTALL})
 
 include(cmake/create_shader.cmake)
 
@@ -24,6 +25,7 @@ add_subdirectory(external/glfw)
 add_library(dggraphics-${DragonEngine_VERSION_MAJOR}
     "src/engine.cpp"
     "src/rotation.cpp"
+    "src/window_finalize.hpp"
     "src/window.cpp"
 )
 
@@ -31,15 +33,16 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/dragon/graphics/config.hpp.in
 
 # Specify the include directories for the library
 target_include_directories(dggraphics-${DragonEngine_VERSION_MAJOR} PUBLIC
-	${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/external/glfw
-    ${CMAKE_CURRENT_SOURCE_DIR}/external/glm
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/glfw>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/glm>
+    $<INSTALL_INTERFACE:include>
 )
 
 target_link_libraries(dggraphics-${DragonEngine_VERSION_MAJOR}
     PUBLIC
+        $<BUILD_INTERFACE:glm::glm>
         glfw
-        glm::glm
         Dragon::Core
 )
 
@@ -50,6 +53,10 @@ endif()
 
 if(Dragon_2D_RENDER)
     target_compile_definitions(dggraphics-${DragonEngine_VERSION_MAJOR} PUBLIC Dragon_2D_RENDER)
+endif()
+
+if(Dragon_INSTALL)
+    include(cmake/install.cmake)
 endif()
 
 # Create an alias for the library
