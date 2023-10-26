@@ -25,8 +25,9 @@ add_subdirectory(external/glfw)
 add_library(dggraphics-${DragonEngine_VERSION_MAJOR}
     "src/engine.cpp"
     "src/rotation.cpp"
-    "src/window_finalize.hpp"
-    "src/window.cpp"
+    "src/window_core.cpp"
+    "src/window_finalize.cpp"
+    "src/window_update.cpp"
 )
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/dragon/graphics/config.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/include/dragon/graphics/config.hpp)

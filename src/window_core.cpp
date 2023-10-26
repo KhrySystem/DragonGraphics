@@ -1,5 +1,4 @@
 #include <dragon/graphics.hpp>
-#include "window_finalize.hpp"
 
 #ifndef NDEBUG
 #include <iostream>
@@ -32,7 +31,7 @@ int Dragon::Graphics::Window::getWindowHeight() {
 
 Dragon::Swapchain Dragon::Graphics::Window::recreateSwapchain(Dragon::Device device) {
     #ifndef NDEBUG
-    std::cout << "Recreating swapchain";
+    std::cout << "Recreating swapchain\n";
     #endif
     Dragon::SwapchainBuilder builder{device};
 
