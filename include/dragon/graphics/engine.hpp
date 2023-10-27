@@ -10,6 +10,7 @@ namespace Dragon::Graphics {
     class Engine;
 }
 
+#include "model.hpp"
 #include "window.hpp"
 
 /**
@@ -75,7 +76,8 @@ namespace Dragon::Graphics
              * @throws std::string
             */
             Window* createWindow(int width, int height, std::string title);
-
+            Model* createModel(Window* window, int width, int height, std::string title);
+            Model* createModel(size_t index, int width, int height, std::string title);
             /**
              * Reimplemented from Dragon::Submodule
             */

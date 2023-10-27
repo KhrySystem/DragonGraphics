@@ -24,6 +24,7 @@ add_subdirectory(external/glfw)
 
 add_library(dggraphics-${DragonEngine_VERSION_MAJOR}
     "src/engine.cpp"
+    "src/model.cpp"
     "src/rotation.cpp"
     "src/window_core.cpp"
     "src/window_finalize.cpp"
@@ -42,9 +43,15 @@ target_include_directories(dggraphics-${DragonEngine_VERSION_MAJOR} PUBLIC
 
 target_link_libraries(dggraphics-${DragonEngine_VERSION_MAJOR}
     PUBLIC
-        $<BUILD_INTERFACE:glm::glm>
-        glfw
-        Dragon::Core
+        $<BUILD_INTERFACE:
+            glm::glm
+            glfw
+            Dragon::Core
+        >
+        $<INSTALL_INTERFACE:
+            glfw
+            Dragon::Core
+        >
 )
 
 if(BUILD_SHARED_LIBS)
@@ -53,7 +60,7 @@ if(BUILD_SHARED_LIBS)
 endif()
 
 if(Dragon_2D_RENDER)
-    target_compile_definitions(dggraphics-${DragonEngine_VERSION_MAJOR} PUBLIC Dragon_2D_RENDER)
+    target_compile_definitions(dggraphics-${DragonEngine_VERSION_MAJOR} PUBLIC DRAGON_2D_SHADER)
 endif()
 
 if(Dragon_INSTALL)

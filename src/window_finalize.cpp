@@ -92,13 +92,17 @@ void createPipeline(Dragon::Device device, VkPipelineLayout pipelineLayout, VkRe
     fragShaderStageInfo.pName = "main";
 
     std::array<VkPipelineShaderStageCreateInfo, 2> shaderStages = {vertShaderStageInfo, fragShaderStageInfo};
-
     pipelineInfo.pStages = shaderStages.data();
+
+    auto bindingDescription = Dragon::Graphics::Vertex::getBindingDescription();
+    auto attributeDescriptions = Dragon::Graphics::Vertex::getAttributeDescriptions();
 
     VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    vertexInputInfo.vertexBindingDescriptionCount = 0;
-    vertexInputInfo.vertexAttributeDescriptionCount = 0;
+    vertexInputInfo.vertexBindingDescriptionCount = 1;
+    vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+    vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+    vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
     pipelineInfo.pVertexInputState = &vertexInputInfo;
 
     VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
