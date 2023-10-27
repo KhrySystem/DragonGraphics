@@ -25,19 +25,29 @@ namespace Dragon::Graphics {
             VkPipeline graphicsPipeline; /**<Graphics Pipeline for this object. Do not touch.*/
             std::vector<VkFramebuffer> framebuffers; /**Framebuffers for rendering multiple frames to the window*/
             VkCommandPool commandPool; /**<The thing responsible for the graphical GPU commands here*/
-            VkCommandBuffer commandBuffer;
-            VkSemaphore imageAvailableSemaphore;
-            VkSemaphore renderFinishedSemaphore;
-            VkFence inFlightFence;
+            std::array<VkCommandBuffer, DRAGON_FRAME_RENDER_COUNT> commandBuffers;
+            std::array<VkSemaphore, DRAGON_FRAME_RENDER_COUNT> imageAvailableSemaphores;
+            std::array<VkSemaphore, DRAGON_FRAME_RENDER_COUNT> renderFinishedSemaphores;
+            std::array<VkFence, DRAGON_FRAME_RENDER_COUNT> inFlightFences;
 
-            void recordCommandBuffer(VkCommandBuffer commandBuffer, size_t imageIndex);
+            size_t frameID = 0;
+
+            void createRenderPass(VkFormat format, Dragon::Device device);
+
+            void cleanupSwapchain(VkDevice device);
+            void createSwapchain(Dragon::Device device);
+            void createFramebuffers(Dragon::Device device);
+            void recordCommandBuffer(size_t imageIndex);
+
         public:
+            bool framebufferResized = false;
             /**
              * @brief Constructor.
              * 
              * @throws std::string
             */
-            Window(VkInstance instance, int width, int height, std::string title);
+            Window(Engine* parent, int width, int height, std::string title);
+            void afterInstanceCreation(Engine* parent);
             /**
              * @brief Returns the raw Vulkan surface object attached to this window.
              * 
@@ -99,18 +109,6 @@ namespace Dragon::Graphics {
              * @throws std::string
             */
             void update(Engine* parent);
-            /**
-             * @brief Recreates the window swapchain when an update is needed. 
-             * 
-             * @param device An instance of Dragon::Device from the window object.
-             * 
-             * @see Dragon::Window::Swapchain
-             * 
-             * @throws std::string
-             * 
-             * @returns The new swapchain object
-            */
-            Dragon::Swapchain recreateSwapchain(Dragon::Device device);
 
             /**
              * @brief Checks this window's close flag and returns the state

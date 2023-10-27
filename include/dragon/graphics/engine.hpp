@@ -37,6 +37,8 @@ namespace Dragon::Graphics
             */
             Dragon::Engine* parent; 
             std::vector<Window*> windows; /**<Storage of all active windows.*/
+            VkQueue graphicsQueue;
+            VkQueue presentQueue;
         public:
             virtual void onAddition(Dragon::Engine* parent) override;
 
@@ -60,6 +62,8 @@ namespace Dragon::Graphics
              * @returns if it is safe to close and shutdown this engine
             */
             inline bool areWindowsOpen() {return this->windows.size() != 0;}
+            inline VkQueue getGraphicsQueue() {return this->graphicsQueue;}
+            inline VkQueue getPresentQueue() {return this->presentQueue;}
 
             /**
              * @param width The initial width of the window (in pixels)

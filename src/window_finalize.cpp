@@ -1,7 +1,7 @@
 #include <dragon/graphics.hpp>
 #include <array>
 
-void createRenderPass(VkFormat format, Dragon::Device device, VkRenderPass* renderPass) {
+void Dragon::Graphics::Window::createRenderPass(VkFormat format, Dragon::Device device) {
     VkAttachmentDescription colorAttachment{};
     colorAttachment.format = format;
     colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -21,14 +21,25 @@ void createRenderPass(VkFormat format, Dragon::Device device, VkRenderPass* rend
     subpass.colorAttachmentCount = 1;
     subpass.pColorAttachments = &colorAttachmentRef;
 
+    VkSubpassDependency dependency{};
+    dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+    dependency.dstSubpass = 0;
+    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency.srcAccessMask = 0;
+    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
     VkRenderPassCreateInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassInfo.attachmentCount = 1;
     renderPassInfo.pAttachments = &colorAttachment;
     renderPassInfo.subpassCount = 1;
     renderPassInfo.pSubpasses = &subpass;
+    renderPassInfo.dependencyCount = 1;
+    renderPassInfo.pDependencies = &dependency;
 
-    VkResult result = vkCreateRenderPass(device, &renderPassInfo, nullptr, renderPass);
+
+    VkResult result = vkCreateRenderPass(device, &renderPassInfo, nullptr, &this->renderPass);
     if (result != VK_SUCCESS) {
         throw fmt::format("failed to create render pass with {}", string_VkResult(result));
     }
@@ -165,59 +176,41 @@ void createPipeline(Dragon::Device device, VkPipelineLayout pipelineLayout, VkRe
     vkDestroyShaderModule(device, vert, nullptr);
     vkDestroyShaderModule(device, frag, nullptr);
 }
-void createSyncObjects(Dragon::Device device, VkSemaphore* imageAvailableSemaphore, VkSemaphore* renderFinishedSemaphore, VkFence* inFlightFence) {
+void createSyncObjects(
+    Dragon::Device device, 
+    std::array<VkSemaphore, DRAGON_FRAME_RENDER_COUNT> &imageAvailableSemaphores, 
+    std::array<VkSemaphore, DRAGON_FRAME_RENDER_COUNT> &renderFinishedSemaphores, 
+    std::array<VkFence, DRAGON_FRAME_RENDER_COUNT> &inFlightFences
+) {
     VkSemaphoreCreateInfo semaphoreInfo{};
     semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
     VkFenceCreateInfo fenceInfo{};
     fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-    VkResult result = vkCreateSemaphore(device, &semaphoreInfo, nullptr, imageAvailableSemaphore);
-    if (result != VK_SUCCESS) {
-        throw fmt::format("vkCreateSemaphore failed with {}", string_VkResult(result));
-    }
-    result = vkCreateSemaphore(device, &semaphoreInfo, nullptr, renderFinishedSemaphore);
-    if (result != VK_SUCCESS) {
-        throw fmt::format("vkCreateSemaphore failed with {}", string_VkResult(result));
-    }
-    result = vkCreateFence(device, &fenceInfo, nullptr, inFlightFence);
-    if(result != VK_SUCCESS) {
-        throw fmt::format("vkCreateFence failed with {}", string_VkResult(result));
-    }
-}
-void Dragon::Graphics::Window::finalize(Dragon::Graphics::Engine* parent) {
-    this->swapchain = this->recreateSwapchain(parent->getParent()->getDevice());
 
-    createRenderPass(this->swapchain.image_format, parent->getParent()->getDevice(), &this->renderPass);
-    createPipelineLayout(parent->getParent()->getDevice(), &this->pipelineLayout);
-    createPipeline(parent->getParent()->getDevice(), this->pipelineLayout, this->renderPass, &this->graphicsPipeline);
-    
-    this->framebuffers.resize(this->swapchain.image_count);
-
-    auto imageViews = this->swapchain.get_image_views(nullptr);
-    if(!imageViews) {
-        throw fmt::format("Swapchain image views failed with {}", imageViews.error().message());
-    }
-
-    for (size_t i = 0; i < this->swapchain.image_count; i++) {
-        VkImageView attachments[] = {
-            imageViews.value()[i]
-        };
-
-        VkFramebufferCreateInfo framebufferInfo{};
-        framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        framebufferInfo.renderPass = this->renderPass;
-        framebufferInfo.attachmentCount = 1;
-        framebufferInfo.pAttachments = attachments;
-        framebufferInfo.width = this->swapchain.extent.width;
-        framebufferInfo.height = this->swapchain.extent.height;
-        framebufferInfo.layers = 1;
-
-        VkResult result = vkCreateFramebuffer(parent->getParent()->getDevice(), &framebufferInfo, nullptr, &this->framebuffers[i]);
+    for(size_t i = 0; i < DRAGON_FRAME_RENDER_COUNT; i++) {
+        VkResult result = vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]);
         if (result != VK_SUCCESS) {
-            throw fmt::format("failed to create framebuffer {} with {}", i, string_VkResult(result));
+            throw fmt::format("vkCreateSemaphore failed with {}", string_VkResult(result));
+        }
+        result = vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]);
+        if (result != VK_SUCCESS) {
+            throw fmt::format("vkCreateSemaphore failed with {}", string_VkResult(result));
+        }
+        result = vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]);
+        if(result != VK_SUCCESS) {
+            throw fmt::format("vkCreateFence failed with {}", string_VkResult(result));
         }
     }
+    
+}
+void Dragon::Graphics::Window::finalize(Dragon::Graphics::Engine* parent) {
+    this->createSwapchain(parent->getParent()->getDevice());
 
+    this->createRenderPass(this->swapchain.image_format, parent->getParent()->getDevice());
+    createPipelineLayout(parent->getParent()->getDevice(), &this->pipelineLayout);
+    createPipeline(parent->getParent()->getDevice(), this->pipelineLayout, this->renderPass, &this->graphicsPipeline);
+    this->createFramebuffers(parent->getParent()->getDevice());
     auto graphicsQueueIndexResult = parent->getParent()->getDevice().get_queue_index(vkb::QueueType::graphics);
 
     if(!graphicsQueueIndexResult) {
@@ -238,12 +231,12 @@ void Dragon::Graphics::Window::finalize(Dragon::Graphics::Engine* parent) {
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocInfo.commandPool = this->commandPool;
     allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    allocInfo.commandBufferCount = 1;
+    allocInfo.commandBufferCount = this->commandBuffers.size();
 
-    result = vkAllocateCommandBuffers(parent->getParent()->getDevice(), &allocInfo, &commandBuffer);
+    result = vkAllocateCommandBuffers(parent->getParent()->getDevice(), &allocInfo, this->commandBuffers.data());
     if (result != VK_SUCCESS) {
         throw fmt::format("failed to allocate command buffers with {}", string_VkResult(result));
     }
 
-    createSyncObjects(parent->getParent()->getDevice(), &this->imageAvailableSemaphore, &this->renderFinishedSemaphore, &this->inFlightFence);
+    createSyncObjects(parent->getParent()->getDevice(), this->imageAvailableSemaphores, this->renderFinishedSemaphores, this->inFlightFences);
 }
