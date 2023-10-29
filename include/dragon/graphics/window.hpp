@@ -2,6 +2,7 @@
 
 #include <vulkan/vulkan.hpp>
 #include "engine.hpp"
+#include "swapchain.hpp"
 
 #ifdef Dragon_2D_RENDER
     #include "shaders/2d.frag.hpp"

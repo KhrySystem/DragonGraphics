@@ -211,7 +211,7 @@ void createSyncObjects(
 void Dragon::Graphics::Window::finalize(Dragon::Graphics::Engine* parent) {
     this->createSwapchain(parent->getParent()->getDevice());
 
-    this->createRenderPass(this->swapchain.image_format, parent->getParent()->getDevice());
+    this->createRenderPass(this->swapchain.getImageFormat(), parent->getParent()->getDevice());
     createPipelineLayout(parent->getParent()->getDevice(), &this->pipelineLayout);
     createPipeline(parent->getParent()->getDevice(), this->pipelineLayout, this->renderPass, &this->graphicsPipeline);
     this->createFramebuffers(parent->getParent()->getDevice());

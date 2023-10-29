@@ -21,7 +21,7 @@ namespace Dragon {
         const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&count);
         for (std::uint32_t i{}; i < count; ++i)
         {
-            previous = previous.enable_extension(glfwExtensions[i]);
+            previous = previous.enableExtension(glfwExtensions[i]);
         }
         return previous;
     }
@@ -37,29 +37,29 @@ namespace Dragon {
             this->windows.push_back(new Graphics::Window(this, 1, 1, ""));
     }
 
-    PhysicalDeviceSelector Graphics::Engine::adjustPhysicalDeviceParams(Dragon::Engine* parent, PhysicalDeviceSelector &previous) {
+    void Graphics::Engine::adjustPhysicalDeviceParams(Dragon::Engine* parent, PhysicalDeviceBuilder &previous) {
         for(Window* window : this->windows) {
             window->afterInstanceCreation(this);
         }
-        return previous.set_surface(this->windows.at(0)->getSurface()).add_required_extension("VK_KHR_swapchain");
+        previous.set_surface(this->windows.at(0)->getSurface()).enableExtension("VK_KHR_swapchain");
     }
 
-    DeviceBuilder Graphics::Engine::adjustDeviceParams(Dragon::Engine* parent, DeviceBuilder &previous) {
-        return previous;
+    void Graphics::Engine::adjustDeviceParams(Dragon::Engine* parent, DeviceBuilder &previous) {
+        
     }
 
     void Graphics::Engine::afterDeviceCreation(Dragon::Engine* parent) {
         Result<VkQueue> graphicsQueueResult = parent->getDevice().get_queue(vkb::QueueType::graphics);
 
         if(!graphicsQueueResult) {
-            throw fmt::format("Failed to create Graphics queue with {}", graphicsQueueResult.error().message());
+            throw fmt::format("Failed to create Graphics queue with {}", graphicsQueueResult.getError().message);
         }
 
         this->graphicsQueue = graphicsQueueResult.value();
 
-        Result<VkQueue> presentQueueResult = parent->getDevice().get_queue(vkb::QueueType::present);
+        Result<VkQueue> presentQueueResult = parent->getDevice().getQueue(vkb::QueueType::present);
         if(!presentQueueResult) {
-            throw fmt::format("Failed to create Present queue with {}", presentQueueResult.error().message());
+            throw fmt::format("Failed to create Present queue with {}", presentQueueResult.getError().message);
         }
         this->presentQueue = presentQueueResult.value();
 

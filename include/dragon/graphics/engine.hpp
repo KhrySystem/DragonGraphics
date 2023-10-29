@@ -12,6 +12,7 @@ namespace Dragon::Graphics {
 
 #include "model.hpp"
 #include "window.hpp"
+#include "swapchain.hpp"
 
 /**
  * @brief Namespace holding everything pertaining to graphics. Does not include GLM aliases.
@@ -86,7 +87,7 @@ namespace Dragon::Graphics
             /**
              * Reimplemented from Dragon::Submodule
             */
-            virtual Dragon::PhysicalDeviceSelector adjustPhysicalDeviceParams(Dragon::Engine* parent, Dragon::PhysicalDeviceSelector &previous) override;
+            virtual Dragon::PhysicalDeviceBuilder adjustPhysicalDeviceParams(Dragon::Engine* parent, Dragon::PhysicalDeviceBuilder &previous) override;
             /**
              * Reimplemented from Dragon::Submodule
             */
