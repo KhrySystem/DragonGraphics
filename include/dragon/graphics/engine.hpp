@@ -39,8 +39,8 @@ namespace Dragon::Graphics
             */
             Dragon::Engine* parent; 
             std::vector<Window*> windows; /**<Storage of all active windows.*/
-            VkQueue graphicsQueue;
-            VkQueue presentQueue;
+            Dragon::Queue graphicsQueue;
+            Dragon::Queue presentQueue;
         public:
             virtual void onAddition(Dragon::Engine* parent) override;
 
@@ -64,8 +64,8 @@ namespace Dragon::Graphics
              * @returns if it is safe to close and shutdown this engine
             */
             inline bool areWindowsOpen() {return this->windows.size() != 0;}
-            inline VkQueue getGraphicsQueue() {return this->graphicsQueue;}
-            inline VkQueue getPresentQueue() {return this->presentQueue;}
+            inline Dragon::Queue getGraphicsQueue() {return this->graphicsQueue;}
+            inline Dragon::Queue getPresentQueue() {return this->presentQueue;}
 
             /**
              * @param width The initial width of the window (in pixels)
@@ -82,16 +82,16 @@ namespace Dragon::Graphics
             /**
              * Reimplemented from Dragon::Submodule
             */
-            virtual Dragon::InstanceBuilder adjustInstanceParams(Dragon::Engine* parent, Dragon::InstanceBuilder &previous) override;
+            virtual void adjustInstanceParams(Dragon::Engine* parent, Dragon::InstanceBuilder &previous) override;
             virtual void beforePhysicalDeviceSelection(Dragon::Engine* parent) override;
             /**
              * Reimplemented from Dragon::Submodule
             */
-            virtual Dragon::PhysicalDeviceBuilder adjustPhysicalDeviceParams(Dragon::Engine* parent, Dragon::PhysicalDeviceBuilder &previous) override;
+            virtual void adjustPhysicalDeviceParams(Dragon::Engine* parent, Dragon::PhysicalDeviceBuilder &previous) override;
             /**
              * Reimplemented from Dragon::Submodule
             */
-            virtual Dragon::DeviceBuilder adjustDeviceParams(Dragon::Engine* parent, Dragon::DeviceBuilder &previous) override;
+            virtual void adjustDeviceParams(Dragon::Engine* parent, Dragon::DeviceBuilder &previous) override;
             virtual void afterDeviceCreation(Dragon::Engine* parent) override;
 
             /**

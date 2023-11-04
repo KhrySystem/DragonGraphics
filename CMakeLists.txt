@@ -26,6 +26,7 @@ add_library(dggraphics-${DragonEngine_VERSION_MAJOR}
     "src/engine.cpp"
     "src/model.cpp"
     "src/rotation.cpp"
+    "src/swapchain.cpp"
     "src/window_core.cpp"
     "src/window_finalize.cpp"
     "src/window_update.cpp"
@@ -33,7 +34,6 @@ add_library(dggraphics-${DragonEngine_VERSION_MAJOR}
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/dragon/graphics/config.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/include/dragon/graphics/config.hpp)
 
-# Specify the include directories for the library
 target_include_directories(dggraphics-${DragonEngine_VERSION_MAJOR} PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/glfw>

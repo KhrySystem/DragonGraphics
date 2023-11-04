@@ -18,6 +18,6 @@ Dragon::Graphics::Model::Model(Dragon::Graphics::Engine* parent, Dragon::Graphic
 }
 
 void Dragon::Graphics::Model::close(Dragon::Graphics::Engine* parent, Dragon::Graphics::Window* owner) {
-    
+    vmaDestroyBuffer(parent->getParent()->getAllocator(), this->vertexBuffer, this->vertexBuffer);
 }
 

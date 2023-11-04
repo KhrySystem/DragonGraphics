@@ -16,14 +16,13 @@ namespace Dragon {
         this->parent = parent;
     }
 
-    InstanceBuilder Graphics::Engine::adjustInstanceParams(Dragon::Engine* parent, InstanceBuilder &previous) {
+    void Graphics::Engine::adjustInstanceParams(Dragon::Engine* parent, InstanceBuilder &previous) {
         uint32_t count;
         const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&count);
-        for (std::uint32_t i{}; i < count; ++i)
+        for(uint32_t i{}; i < count; ++i)
         {
-            previous = previous.enableExtension(glfwExtensions[i]);
+            previous.enableExtension(glfwExtensions[i]);
         }
-        return previous;
     }
 
     Graphics::Window* Graphics::Engine::createWindow(int width, int height, std::string title) {
@@ -41,27 +40,28 @@ namespace Dragon {
         for(Window* window : this->windows) {
             window->afterInstanceCreation(this);
         }
-        previous.set_surface(this->windows.at(0)->getSurface()).enableExtension("VK_KHR_swapchain");
+        VkSurfaceKHR surf = this->windows[0]->getSurface();
+        previous.setSurface(surf);
     }
 
     void Graphics::Engine::adjustDeviceParams(Dragon::Engine* parent, DeviceBuilder &previous) {
-        
+        previous.enableExtension("VK_KHR_swapchain");
     }
 
     void Graphics::Engine::afterDeviceCreation(Dragon::Engine* parent) {
-        Result<VkQueue> graphicsQueueResult = parent->getDevice().get_queue(vkb::QueueType::graphics);
+        Result<Queue> graphicsQueueResult = parent->getDevice().getQueue(QueueFamilyType::GRAPHICS);
 
         if(!graphicsQueueResult) {
             throw fmt::format("Failed to create Graphics queue with {}", graphicsQueueResult.getError().message);
         }
 
-        this->graphicsQueue = graphicsQueueResult.value();
+        this->graphicsQueue = graphicsQueueResult.getValue();
 
-        Result<VkQueue> presentQueueResult = parent->getDevice().getQueue(vkb::QueueType::present);
+        Result<Queue> presentQueueResult = parent->getDevice().getQueue(QueueFamilyType::PRESENT);
         if(!presentQueueResult) {
             throw fmt::format("Failed to create Present queue with {}", presentQueueResult.getError().message);
         }
-        this->presentQueue = presentQueueResult.value();
+        this->presentQueue = presentQueueResult.getValue();
 
         for(Graphics::Window* window : this->windows) {
             window->finalize(this);

@@ -36,7 +36,6 @@
 #include "graphics/engine.hpp"
 #include "graphics/model.hpp"
 #include "graphics/rotation.hpp"
-#include "graphics/swapchain_builder.hpp"
 #include "graphics/swapchain.hpp"
 #include "graphics/vertex.hpp"
 #include "graphics/window.hpp"

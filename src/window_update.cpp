@@ -19,7 +19,7 @@ void Dragon::Graphics::Window::recordCommandBuffer(size_t imageIndex) {
     renderPassInfo.renderPass = renderPass;
     renderPassInfo.framebuffer = this->framebuffers[imageIndex];
     renderPassInfo.renderArea.offset = {0, 0};
-    renderPassInfo.renderArea.extent = this->swapchain.extent;
+    renderPassInfo.renderArea.extent = this->swapchain.getExtent();
 
     VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
     renderPassInfo.clearValueCount = 1;
@@ -32,15 +32,15 @@ void Dragon::Graphics::Window::recordCommandBuffer(size_t imageIndex) {
     VkViewport viewport{};
     viewport.x = 0.0f;
     viewport.y = 0.0f;
-    viewport.width = static_cast<float>(this->swapchain.extent.width);
-    viewport.height = static_cast<float>(this->swapchain.extent.height);
+    viewport.width = static_cast<float>(this->swapchain.getExtent().width);
+    viewport.height = static_cast<float>(this->swapchain.getExtent().height);
     viewport.minDepth = 0.0f;
     viewport.maxDepth = 1.0f;
     vkCmdSetViewport(this->commandBuffers[this->frameID], 0, 1, &viewport);
 
     VkRect2D scissor{};
     scissor.offset = {0, 0};
-    scissor.extent = this->swapchain.extent;
+    scissor.extent = this->swapchain.getExtent();
     vkCmdSetScissor(this->commandBuffers[this->frameID], 0, 1, &scissor);
 
     vkCmdDraw(this->commandBuffers[this->frameID], 3, 1, 0, 0);

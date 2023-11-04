@@ -215,16 +215,12 @@ void Dragon::Graphics::Window::finalize(Dragon::Graphics::Engine* parent) {
     createPipelineLayout(parent->getParent()->getDevice(), &this->pipelineLayout);
     createPipeline(parent->getParent()->getDevice(), this->pipelineLayout, this->renderPass, &this->graphicsPipeline);
     this->createFramebuffers(parent->getParent()->getDevice());
-    auto graphicsQueueIndexResult = parent->getParent()->getDevice().get_queue_index(vkb::QueueType::graphics);
-
-    if(!graphicsQueueIndexResult) {
-        throw fmt::format("failed to get graphics queue index with {}", graphicsQueueIndexResult.error().message());
-    }
+    uint32_t graphicsQueueIndex = parent->getGraphicsQueue().getQueueFamily().getID();
 
     VkCommandPoolCreateInfo poolInfo{};
     poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-    poolInfo.queueFamilyIndex = graphicsQueueIndexResult.value();
+    poolInfo.queueFamilyIndex = graphicsQueueIndex;
 
     VkResult result = vkCreateCommandPool(parent->getParent()->getDevice(), &poolInfo, nullptr, &this->commandPool);
     if(result != VK_SUCCESS) {
