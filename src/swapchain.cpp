@@ -24,10 +24,10 @@ VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &pres
 namespace Dragon {
     Result<Swapchain> SwapchainBuilder::build() {
         VkSurfaceCapabilitiesKHR surfCaps;
-        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(this->device.getPhysicalDevice(), this->surface, &surfCaps);
+        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(this->device.getPhysicalDevice()->getDevice(), this->surface, &surfCaps);
 
         uint32_t formatCount;
-        vkGetPhysicalDeviceSurfaceFormatsKHR(this->device.getPhysicalDevice(), this->surface, &formatCount, nullptr);
+        vkGetPhysicalDeviceSurfaceFormatsKHR(this->device.getPhysicalDevice()->getDevice(), this->surface, &formatCount, nullptr);
         if(formatCount == 0) {
             ResultError error;
             error.message = fmt::format("No surface formats were found.");
@@ -36,12 +36,12 @@ namespace Dragon {
         }
 
         std::vector<VkSurfaceFormatKHR> formats(formatCount);
-        vkGetPhysicalDeviceSurfaceFormatsKHR(this->device.getPhysicalDevice(), this->surface, &formatCount, formats.data());
+        vkGetPhysicalDeviceSurfaceFormatsKHR(this->device.getPhysicalDevice()->getDevice(), this->surface, &formatCount, formats.data());
 
         uint32_t presentModeCount;
-        vkGetPhysicalDeviceSurfacePresentModesKHR(this->device.getPhysicalDevice(), this->surface, &presentModeCount, nullptr);
+        vkGetPhysicalDeviceSurfacePresentModesKHR(this->device.getPhysicalDevice()->getDevice(), this->surface, &presentModeCount, nullptr);
         std::vector<VkPresentModeKHR> presentModes(presentModeCount);
-        vkGetPhysicalDeviceSurfacePresentModesKHR(this->device.getPhysicalDevice(), this->surface, &presentModeCount, presentModes.data());
+        vkGetPhysicalDeviceSurfacePresentModesKHR(this->device.getPhysicalDevice()->getDevice(), this->surface, &presentModeCount, presentModes.data());
 
         VkSurfaceFormatKHR format = chooseSwapSurfaceFormat(formats);
         VkPresentModeKHR presentMode = chooseSwapPresentMode(presentModes);
@@ -95,7 +95,7 @@ namespace Dragon {
         swapchain.device = this->device;
         swapchain.extent = extent;
         swapchain.imageFormat = format.format;
-        VkResult result = vkCreateSwapchainKHR(this->device, &createInfo, this->device.getPhysicalDevice().getInstance().getAllocationCallbacks(), &swapchain.swapchain);
+        VkResult result = vkCreateSwapchainKHR(this->device, &createInfo, nullptr, &swapchain.swapchain);
         if(result != VK_SUCCESS) {
             ResultError error;
             error.message = fmt::format("Could not create swapchain with {}", string_VkResult(result));
@@ -127,7 +127,7 @@ namespace Dragon {
             icInfo.subresourceRange.levelCount = 1;
             icInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
 
-            result = vkCreateImageView(this->device, &icInfo, this->device.getPhysicalDevice().getInstance().getAllocationCallbacks(), &swapchain.imageViews[i]);
+            result = vkCreateImageView(this->device, &icInfo, nullptr, &swapchain.imageViews[i]);
             if(result != VK_SUCCESS) {
                 ResultError error;
                 error.message = fmt::format("Could not create ImageView with {}", string_VkResult(result));
@@ -139,10 +139,10 @@ namespace Dragon {
         return Result<Swapchain>(swapchain);
     }
 
-    Swapchain::~Swapchain() {
+    void Swapchain::close() {
         for(auto imageView : this->imageViews) {
-            vkDestroyImageView(this->device, imageView, this->device.getPhysicalDevice().getInstance().getAllocationCallbacks());
+            vkDestroyImageView(this->device, imageView, nullptr);
         }
-        vkDestroySwapchainKHR(this->device, this->swapchain, this->device.getPhysicalDevice().getInstance().getAllocationCallbacks());
+        vkDestroySwapchainKHR(this->device, this->swapchain, nullptr);
     }
 }

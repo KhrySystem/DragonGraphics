@@ -21,7 +21,7 @@ namespace Dragon {
 
             inline operator VkSwapchainKHR() const {return this->swapchain;}
 
-            ~Swapchain();
+            void close();
 
             friend class SwapchainBuilder;
             friend class Swapchain;
@@ -53,5 +53,6 @@ namespace Dragon {
                 this->graphicsQueueFamily = graphics;
                 this->presentQueueFamily = present;
             }
+            inline void setSurface(VkSurfaceKHR &surface) {this->surface = surface;}
     };
 }

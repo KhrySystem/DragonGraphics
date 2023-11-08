@@ -74,6 +74,7 @@ namespace Dragon {
         SwapchainBuilder builder{device};
 
         builder.setOldSwapchain(this->swapchain);
+        builder.setSurface(this->surface);
 
         Result<Swapchain> result = builder.build();
 
